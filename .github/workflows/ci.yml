@@ -1,3 +1,4 @@
+cat > .github/workflows/ci.yml << 'EOF'
 name: CI
 
 on:
@@ -18,6 +19,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - name: Installer les dépendances
         working-directory: python-app
         run: |
@@ -28,3 +30,4 @@ jobs:
       - name: Lancer les tests
         working-directory: python-app
         run: python -m pytest -v
+EOF
