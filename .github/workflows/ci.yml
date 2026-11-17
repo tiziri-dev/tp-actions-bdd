@@ -29,3 +29,56 @@ jobs:
       - name: Lancer les tests
         working-directory: python-app
         run: python -m pytest -v
+
+  node:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+      - name: Préparer la base de données
+        run: bash db/setup.sh
+      - name: Installer Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Installer les dépendances
+        working-directory: node-app
+        run: npm ci
+      - name: Lancer les tests
+        working-directory: node-app
+        run: npm test
+
+  java:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+      - name: Préparer la base de données
+        run: bash db/setup.sh
+      - name: Installer Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Compiler et lancer les tests
+        working-directory: java-app
+        run: mvn -B package
+
+  php:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+      - name: Préparer la base de données
+        run: bash db/setup.sh
+      - name: Installer PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: pdo, pdo_pgsql
+      - name: Installer les dépendances
+        working-directory: php-app
+        run: composer install --no-interaction
+      - name: Lancer les tests
+        working-directory: php-app
+        run: vendor/bin/phpunit tests

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Prepare PostgreSQL sur un runner GitHub (Ubuntu) :
+# Prépare PostgreSQL sur un runner GitHub (Ubuntu) :
 # démarrage du serveur, mot de passe, base "tp" et table "students".
 set -euo pipefail
 

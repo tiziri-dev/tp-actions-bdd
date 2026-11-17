@@ -1,25 +1,25 @@
 import pytest
-from students import get_connection, add_student, get_student, average_grade
+
+from students import add_student, average_grade, get_connection, get_student
+
 
 @pytest.fixture
 def conn():
-    connection = get_connection()
-    with connection.cursor() as cur:
-        cur.execute("TRUNCATE TABLE students RESTART IDENTITY;")
-    connection.commit()
-    yield connection
-    connection.close()
+    c = get_connection()
+    with c, c.cursor() as cur:
+        cur.execute("DELETE FROM students")
+    yield c
+    c.close()
 
-def test_add_and_get(conn):
-    add_student(conn, "Alice", 10)
-    student = get_student(conn, "Alice")
-    assert student is not None
-    assert student[0] == "Alice"
-    assert float(student[1]) == 10.0
 
-def test_get_missing(conn):
-    student = get_student(conn, "Inconnu")
-    assert student is None
+def test_ajouter_et_lire(conn):
+    student_id = add_student(conn, "Amel", 15.5)
+    assert get_student(conn, student_id) == {"name": "Amel", "grade": 15.5}
+
+
+def test_etudiant_inconnu(conn):
+    assert get_student(conn, 9999) is None
+
 
 def test_moyenne(conn):
     add_student(conn, "Amel", 10)
