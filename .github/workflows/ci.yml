@@ -10,28 +10,26 @@ jobs:
     steps:
       - name: Récupérer le code
         uses: actions/checkout@v4
-
       - name: Préparer la base de données
         run: bash db/setup.sh
-
       - name: Installer Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-
       - name: Installer les dépendances
         working-directory: python-app
         run: |
           python -m pip install --upgrade pip
           python -m pip install pytest psycopg2-binary
           python -m pip install -r requirements.txt
-
       - name: Lancer les tests
         working-directory: python-app
         run: python -m pytest -v
 
   node:
     runs-on: ubuntu-latest
+    env:
+      DB_HOST: 127.0.0.1
     steps:
       - name: Récupérer le code
         uses: actions/checkout@v4
@@ -81,4 +79,4 @@ jobs:
         run: composer install --no-interaction
       - name: Lancer les tests
         working-directory: php-app
-        run: vendor/bin/phpunit tests
+        run: vendor/bin/phpunit .
