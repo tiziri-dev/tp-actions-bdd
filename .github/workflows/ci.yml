@@ -1,4 +1,3 @@
-cat > .github/workflows/ci.yml << 'EOF'
 name: CI
 
 on:
@@ -30,4 +29,3 @@ jobs:
       - name: Lancer les tests
         working-directory: python-app
         run: python -m pytest -v
-EOF
