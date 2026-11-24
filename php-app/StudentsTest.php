@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/Students.php';
 use App\Students;
 use PHPUnit\Framework\TestCase;
 

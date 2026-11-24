@@ -82,4 +82,4 @@ jobs:
         run: composer install --no-interaction
       - name: Lancer les tests
         working-directory: php-app
-        run: vendor/bin/phpunit
+        run: vendor/bin/phpunit StudentsTest.php
