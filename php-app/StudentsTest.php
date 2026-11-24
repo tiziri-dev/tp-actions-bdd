@@ -1,33 +1,38 @@
 <?php
 require_once __DIR__ . '/Students.php';
-use App\Students;
+
 use PHPUnit\Framework\TestCase;
 
 class StudentsTest extends TestCase
 {
-    private PDO $pdo;
+    private $students;
 
     protected function setUp(): void
     {
-        $this->pdo = Students::connect();
-        $this->pdo->exec("DELETE FROM students");
+        $this->students = new Students();
+        $pdo = new PDO("pgsql:host=127.0.0.1;dbname=tp", "postgres", "postgres");
+        $pdo->exec("TRUNCATE TABLE students RESTART IDENTITY");
     }
 
-    public function testAjouterEtLire(): void
+    public function testAjouterEtLire()
     {
-        $id = Students::add($this->pdo, "Amel", 15.5);
-        $this->assertSame(["name" => "Amel", "grade" => 15.5], Students::get($this->pdo, $id));
+        $this->students->addStudent("Alice", 15);
+        $student = $this->students->getStudent("Alice");
+        $this->assertNotNull($student);
+        $this->assertEquals("Alice", $student['name']);
+        $this->assertEquals(15, (float)$student['grade']);
     }
 
-    public function testEtudiantInconnu(): void
+    public function testEtudiantInconnu()
     {
-        $this->assertNull(Students::get($this->pdo, 9999));
+        $student = $this->students->getStudent("Inconnu");
+        $this->assertNull($student);
     }
 
-    public function testMoyenne(): void
+    public function testMoyenne()
     {
-        Students::add($this->pdo, "Amel", 10);
-        Students::add($this->pdo, "Karim", 14);
-        $this->assertSame(12.0, Students::average($this->pdo));
+        $this->students->addStudent("Amel", 10);
+        $this->students->addStudent("Karim", 14);
+        $this->assertEquals(12.0, $this->students->averageGrade());
     }
 }
